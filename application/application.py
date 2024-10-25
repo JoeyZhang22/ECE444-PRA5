@@ -29,7 +29,7 @@ def prediction():
         return jsonify({"error": "Null Text"}), 400
     # From lab handout
     prediction = loaded_model.predict(vectorizer.transform([text]))[0]
-    return jsonify({"text": text, "prediction": "fake" if prediction == 1 else "real"})122
+    return jsonify({"text": text, "prediction": "fake" if prediction == 1 else "real"})
 
 
 if __name__ == "__main__":
