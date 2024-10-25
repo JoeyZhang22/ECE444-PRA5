@@ -6,17 +6,14 @@ import json
 
 application = Flask(__name__)
 
+print("Loading Model")
+loaded_model = None
+with open("basic_classifier.pkl", "rb") as fid:
+    loaded_model = pickle.load(fid)
 
-# Load model
-def load_model():
-    with open("basic_classifier.pkl", "rb") as fid:
-        model = pickle.load(fid)
-    with open("count_vectorizer.pkl", "rb") as vd:
-        vectorizer = pickle.load(vd)
-    return model, vectorizer
-
-
-loaded_model, vectorizer = load_model()
+vectorizer = None
+with open("count_vectorizer.pkl", "rb") as vd:
+    vectorizer = pickle.load(vd)
 
 
 @application.route("/")
@@ -30,10 +27,9 @@ def prediction():
     text = data.get("text", "")
     if len(text) == 0:
         return jsonify({"error": "Null Text"}), 400
-
     # From lab handout
-    prediction = loaded_model.predict(vectorizer.transform([text]))
-    return jsonify({"text": text, "prediction": "fake" if prediction == 1 else "real"})
+    prediction = loaded_model.predict(vectorizer.transform([text]))[0]
+    return jsonify({"text": text, "prediction": "fake" if prediction == 1 else "real"})122
 
 
 if __name__ == "__main__":
